@@ -11,7 +11,7 @@
     </div>
     <post-list
         v-if="!isPostsLoading"
-        :posts="posts"
+        :posts="sortedPosts"
         @remove="removePost"
     />
     <div v-else>Loading</div>
@@ -72,7 +72,12 @@ export default {
 
       }
     }
-  }
+  },
+  computed: {
+    sortedPosts() {
+      return [...this.posts].sort((post1, post2) => post1[this.selectedSort]?.localeCompare(post2[this.selectedSort]))
+    }
+  },
 }
 </script>
 
