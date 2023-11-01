@@ -1,5 +1,5 @@
 <template>
-  <div v-if="posts.length > 0">
+  <div v-show="posts.length > 0">
     <h3>Posts list</h3>
     <post-item
         v-for="post in posts"
@@ -8,7 +8,7 @@
         @remove="$emit('remove', post)"
     />
   </div>
-  <h2 v-else>Posts list is empty</h2>
+  <h2 v-show="posts.length === 0">Posts list is empty</h2>
 </template>
 
 <script>
