@@ -5,7 +5,10 @@
           @create="createPost"
       />
     </my-dialog>
-    <my-button style="margin-bottom: 15px;" @click="openDialog">create post</my-button>
+    <div class="app__btns">
+      <my-button @click="openDialog">create post</my-button>
+      <my-select v-model="selectedSort" :options="sortOptions"/>
+    </div>
     <post-list
         v-if="!isPostsLoading"
         :posts="posts"
@@ -30,6 +33,11 @@ export default {
       posts: [],
       dialogVisible: false,
       isPostsLoading: false,
+      selectedSort: '',
+      sortOptions: [
+        {value: 'title', name: 'by title'},
+        {value: 'body', name: 'by body'},
+      ]
     }
   },
   mounted() {
@@ -79,4 +87,10 @@ export default {
   padding: 20px;
 }
 
+.app__btns {
+  margin: 15px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 </style>
