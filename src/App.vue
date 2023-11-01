@@ -7,15 +7,18 @@
     </my-dialog>
     <my-button style="margin-bottom: 15px;" @click="openDialog">create post</my-button>
     <post-list
+        v-if="!isPostsLoading"
         :posts="posts"
         @remove="removePost"
     />
+    <div v-else>Loading</div>
   </div>
 </template>
 
 <script>
 import PostList from "@/components/PostList.vue";
 import PostForm from "@/components/PostForm.vue";
+import axios from "axios";
 
 export default {
   components: {
@@ -24,13 +27,13 @@ export default {
   },
   data() {
     return {
-      posts: [
-        {id: 1, title: "Title1", body: "body1"},
-        {id: 2, title: "Title2", body: "body2"},
-        {id: 3, title: "Title3", body: "body3"},
-      ],
+      posts: [],
       dialogVisible: false,
+      isPostsLoading: false,
     }
+  },
+  mounted() {
+    this.fetchPosts();
   },
   methods: {
     createPost(post) {
@@ -42,6 +45,24 @@ export default {
     },
     openDialog() {
       this.dialogVisible = true;
+    },
+    async fetchPosts() {
+      try {
+        this.isPostsLoading = true;
+        setTimeout(async () => {
+          const response = await axios.get('https://jsonplaceholder.typicode.com/posts', {
+            params: {
+              _limit: 10,
+            }
+          })
+          this.posts = response.data;
+          this.isPostsLoading = false;
+        }, 1000)
+      } catch {
+        alert('Error')
+      } finally {
+
+      }
     }
   }
 }
