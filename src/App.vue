@@ -5,13 +5,24 @@
           @create="createPost"
       />
     </my-dialog>
+    <my-input
+      v-model="searchQuery"
+      placeholder="Search..."
+    />
     <div class="app__btns">
-      <my-button @click="openDialog">create post</my-button>
-      <my-select v-model="selectedSort" :options="sortOptions"/>
+      <my-button
+          @click="openDialog"
+      >
+        create post
+      </my-button>
+      <my-select
+          v-model="selectedSort"
+          :options="sortOptions"
+      />
     </div>
     <post-list
         v-if="!isPostsLoading"
-        :posts="sortedPosts"
+        :posts="sortedAndSearchedPosts"
         @remove="removePost"
     />
     <div v-else>Loading</div>
@@ -22,9 +33,11 @@
 import PostList from "@/components/PostList.vue";
 import PostForm from "@/components/PostForm.vue";
 import axios from "axios";
+import MyInput from "@/components/UI/MyInput.vue";
 
 export default {
   components: {
+    MyInput,
     PostForm,
     PostList,
   },
@@ -37,7 +50,8 @@ export default {
       sortOptions: [
         {value: 'title', name: 'by title'},
         {value: 'body', name: 'by body'},
-      ]
+      ],
+      searchQuery: '',
     }
   },
   mounted() {
@@ -76,6 +90,9 @@ export default {
   computed: {
     sortedPosts() {
       return [...this.posts].sort((post1, post2) => post1[this.selectedSort]?.localeCompare(post2[this.selectedSort]))
+    },
+    sortedAndSearchedPosts() {
+      return this.sortedPosts.filter(post => post.title.toLowerCase().includes(this.searchQuery.toLowerCase()));
     }
   },
 }
