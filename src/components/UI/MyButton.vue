@@ -15,7 +15,6 @@ export default {
   cursor: pointer;
   border: 0;
   background: none;
-  align-self: flex-end;
   padding: 10px 15px;
   color: #5b4ae1;
   box-shadow: inset 0 0 0 1px #5b4ae1;
