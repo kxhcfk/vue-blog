@@ -6,8 +6,8 @@
       />
     </my-dialog>
     <my-input
-      v-model="searchQuery"
-      placeholder="Search..."
+        v-model="searchQuery"
+        placeholder="Search..."
     />
     <div class="app__btns">
       <my-button
@@ -26,6 +26,19 @@
         @remove="removePost"
     />
     <div v-else>Loading</div>
+    <div class="page__wrapper">
+      <div
+          class="page"
+          v-for="pageNumber in totalPage"
+          :key="pageNumber"
+          :class="{
+            'current-page': pageNumber === page
+          }"
+          @click="changePage(pageNumber)"
+      >
+        {{ pageNumber }}
+      </div>
+    </div>
   </div>
 </template>
 
@@ -47,6 +60,9 @@ export default {
       dialogVisible: false,
       isPostsLoading: false,
       selectedSort: '',
+      page: 1,
+      limit: 10,
+      totalPage: 0,
       sortOptions: [
         {value: 'title', name: 'by title'},
         {value: 'body', name: 'by body'},
@@ -68,15 +84,20 @@ export default {
     openDialog() {
       this.dialogVisible = true;
     },
+    changePage(pageNumber) {
+      this.page = pageNumber;
+    },
     async fetchPosts() {
       try {
         this.isPostsLoading = true;
         setTimeout(async () => {
           const response = await axios.get('https://jsonplaceholder.typicode.com/posts', {
             params: {
-              _limit: 10,
+              _page: this.page,
+              _limit: this.limit,
             }
           })
+          this.totalPage = Math.ceil(response.headers['x-total-count'] / this.limit);
           this.posts = response.data;
           this.isPostsLoading = false;
         }, 1000)
@@ -95,6 +116,11 @@ export default {
       return this.sortedPosts.filter(post => post.title.toLowerCase().includes(this.searchQuery.toLowerCase()));
     }
   },
+  watch: {
+    page() {
+      this.fetchPosts();
+    }
+  }
 }
 </script>
 
@@ -115,4 +141,27 @@ export default {
   justify-content: space-between;
   align-items: center;
 }
+
+.page__wrapper {
+  display: flex;
+  margin-top: 15px;
+  gap: 10px;
+}
+
+.page {
+  box-shadow: inset 0 0 0 1px #c3bcf8;
+  color: #c3bcf8;
+  display: flex;
+  width: 25px;
+  height: 25px;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+.current-page {
+  color: #5b4ae1;
+  box-shadow: inset 0 0 0 1px #5b4ae1;
+}
+
 </style>
