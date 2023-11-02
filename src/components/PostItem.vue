@@ -7,6 +7,11 @@
     </div>
     <div class="post__btns">
       <my-button
+        @click="$router.push(`/posts/${post.id}`)"
+      >
+        Open
+      </my-button>
+      <my-button
           @click="$emit('remove', post)"
       >
         Delete
@@ -16,7 +21,10 @@
 </template>
 
 <script>
+import MyButton from "@/components/UI/MyButton.vue";
+
 export default {
+  components: {MyButton},
   props: {
     post: {
       type: Object,
@@ -35,5 +43,12 @@ export default {
   align-items: center;
   justify-content: space-between;
   gap: 10px;
+}
+
+.post__btns {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
 }
 </style>
