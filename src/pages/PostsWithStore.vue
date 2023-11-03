@@ -2,6 +2,10 @@
   <div>
     <h2>{{ $store.state.likes }}</h2>
     <h2>{{ $store.getters.doubleLikes }}</h2>
+    <div>
+      <my-button @click="$store.commit('incrementLikes')">inc</my-button>
+      <my-button @click="$store.commit('decrementLikes')">dec</my-button>
+    </div>
     <my-dialog v-model:show="dialogVisible">
       <post-form
           @create="createPost"
@@ -49,9 +53,11 @@
 import PostList from "@/components/PostList.vue";
 import PostForm from "@/components/PostForm.vue";
 import axios from "axios";
+import MyButton from "@/components/UI/MyButton.vue";
 
 export default {
   components: {
+    MyButton,
     PostForm,
     PostList,
   },

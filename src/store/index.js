@@ -10,12 +10,13 @@ export default createStore({
         }
     },
     mutations: {
-
+        incrementLikes(state) {
+            state.likes += 1;
+        },
+        decrementLikes(state) {
+            state.likes -= 1;
+        },
     },
-    actions: {
-
-    },
-    modules: {
-
-    },
+    actions: {},
+    modules: {},
 })
