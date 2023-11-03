@@ -1,18 +1,13 @@
 <template>
   <div>
-    <h2>{{ $store.state.likes }}</h2>
-    <h2>{{ $store.getters.doubleLikes }}</h2>
-    <div>
-      <my-button @click="$store.commit('incrementLikes')">inc</my-button>
-      <my-button @click="$store.commit('decrementLikes')">dec</my-button>
-    </div>
     <my-dialog v-model:show="dialogVisible">
       <post-form
           @create="createPost"
       />
     </my-dialog>
     <my-input
-        v-model="searchQuery"
+        :model-value="searchQuery"
+        @update:model-value="setSearchQuery"
         placeholder="Search..."
     />
     <div class="app__btns">
@@ -22,7 +17,8 @@
         create post
       </my-button>
       <my-select
-          v-model="selectedSort"
+          :model-value="selectedSort"
+          @update:model-value="setSelectedSort"
           :options="sortOptions"
       />
     </div>
@@ -33,48 +29,22 @@
     />
     <div v-else>Loading</div>
     <div v-intersection="loadMorePosts" class="observer"></div>
-    <!--<div class="page__wrapper">
-      <div
-          class="page"
-          v-for="pageNumber in totalPage"
-          :key="pageNumber"
-          :class="{
-            'current-page': pageNumber === page
-          }"
-          @click="changePage(pageNumber)"
-      >
-        {{ pageNumber }}
-      </div>
-    </div>-->
   </div>
 </template>
 
 <script>
 import PostList from "@/components/PostList.vue";
 import PostForm from "@/components/PostForm.vue";
-import axios from "axios";
-import MyButton from "@/components/UI/MyButton.vue";
+import {mapActions, mapGetters, mapMutations, mapState} from "vuex";
 
 export default {
   components: {
-    MyButton,
     PostForm,
     PostList,
   },
   data() {
     return {
-      posts: [],
       dialogVisible: false,
-      isPostsLoading: false,
-      selectedSort: '',
-      page: 0,
-      limit: 10,
-      totalPage: 0,
-      searchQuery: '',
-      sortOptions: [
-        {value: 'title', name: 'by title'},
-        {value: 'body', name: 'by body'},
-      ],
     }
   },
   mounted() {
@@ -91,34 +61,30 @@ export default {
     openDialog() {
       this.dialogVisible = true;
     },
-    /* changePage(pageNumber) {
-      this.page = pageNumber;
-    }, */
-    async loadMorePosts() {
-      try {
-        this.page += 1;
-        setTimeout(async () => {
-          const response = await axios.get('https://jsonplaceholder.typicode.com/posts', {
-            params: {
-              _page: this.page,
-              _limit: this.limit,
-            }
-          })
-          this.totalPage = Math.ceil(response.headers['x-total-count'] / this.limit);
-          this.posts = [...this.posts, ...response.data];
-        }, 1000)
-      } catch {
-        alert('Error')
-      }
-    }
+    ...mapMutations({
+      setPage: 'post/setPage',
+      setSearchQuery: 'post/setSearchQuery',
+      setSelectedSort: 'post/setSelectedSort',
+    }),
+    ...mapActions({
+      loadMorePosts: 'post/loadMorePosts',
+    }),
   },
   computed: {
-    sortedPosts() {
-      return [...this.posts].sort((post1, post2) => post1[this.selectedSort]?.localeCompare(post2[this.selectedSort]))
-    },
-    sortedAndSearchedPosts() {
-      return this.sortedPosts.filter(post => post.title.toLowerCase().includes(this.searchQuery.toLowerCase()));
-    }
+    ...mapState({
+      posts: state => state.post.posts,
+      isPostsLoading: state => state.post.isPostsLoading,
+      selectedSort: state => state.post.selectedSort,
+      page: state => state.post.page,
+      limit: state => state.post.limit,
+      totalPage: state => state.post.totalPage,
+      searchQuery: state => state.post.searchQuery,
+      sortOptions: state => state.post.sortOptions,
+    }),
+    ...mapGetters({
+      sortedPosts: 'post/sortedPosts',
+      sortedAndSearchedPosts: 'post/sortedAndSearchedPosts',
+    })
   },
 }
 </script>

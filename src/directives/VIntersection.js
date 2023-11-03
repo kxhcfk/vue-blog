@@ -1,7 +1,6 @@
 export default {
     name: 'intersection',
     mounted(el, binding) {
-        console.log(el, binding)
         const observer = new IntersectionObserver((entries, observer) => {
           if (entries[0].isIntersecting) {
               binding.value();
