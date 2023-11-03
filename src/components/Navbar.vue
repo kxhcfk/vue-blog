@@ -12,6 +12,9 @@
     <my-button @click="$router.push('/store-posts')">
       Store posts
     </my-button>
+    <my-button @click="$router.push('/composition-posts')">
+      Composition posts
+    </my-button>
   </div>
 </template>
 

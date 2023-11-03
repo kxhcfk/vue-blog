@@ -4,6 +4,7 @@ import Posts from "@/pages/Posts.vue";
 import Post from "@/pages/Post.vue";
 import About from "@/pages/About.vue";
 import PostsWithStore from "@/pages/PostsWithStore.vue";
+import PostsComposition from "@/pages/PostsComposition.vue";
 
 const routes = [
     {
@@ -25,6 +26,10 @@ const routes = [
     {
         path: '/store-posts',
         component: PostsWithStore,
+    },
+    {
+        path: '/composition-posts',
+        component: PostsComposition,
     },
 ]
 
