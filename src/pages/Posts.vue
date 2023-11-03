@@ -26,7 +26,7 @@
         @remove="removePost"
     />
     <div v-else>Loading</div>
-    <div ref="observer" class="observer"></div>
+    <div v-intersection="loadMorePosts" class="observer"></div>
     <!--<div class="page__wrapper">
       <div
           class="page"
@@ -71,16 +71,6 @@ export default {
   },
   mounted() {
     this.loadMorePosts();
-
-    const observer = new IntersectionObserver((entries, observer) => {
-      if (entries[0].isIntersecting && this.page < this.totalPage) {
-        this.loadMorePosts();
-      }
-    }, {
-      rootMargin: '0px',
-      threshold: 1.0,
-    })
-    observer.observe(this.$refs.observer);
   },
   methods: {
     createPost(post) {
