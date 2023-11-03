@@ -9,15 +9,14 @@
     <my-button @click="$router.push('/')">
       Main
     </my-button>
+    <my-button @click="$router.push('/store-posts')">
+      Store posts
+    </my-button>
   </div>
 </template>
 
 <script>
-import MyButton from "@/components/UI/MyButton.vue";
-
 export default {
-  components: {MyButton}
-
 }
 </script>
 
